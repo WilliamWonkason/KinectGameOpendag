@@ -1,0 +1,57 @@
+﻿using UnityEngine;
+using System.Collections;
+using Windows.Kinect;
+
+public class JointPosition : MonoBehaviour 
+{
+    public Windows.Kinect.JointType _jointType;
+    public GameObject _bodySourceManager;
+    private BodySourceManager _bodyManager;
+
+	// Use this for initialization
+	void Start () 
+    {
+	
+	}
+	
+	// Update is called once per frame
+	void Update () 
+    {
+        if (_bodySourceManager == null)
+        {
+            return;
+        }
+
+        _bodyManager = _bodySourceManager.GetComponent<BodySourceManager>();
+        if (_bodyManager == null)
+        {
+            return;
+        }
+
+        Body[] data = _bodyManager.GetData();
+        if (data == null)
+        {
+            return;
+        }
+
+        // get the first tracked body...
+        foreach (var body in data)
+        {
+            if (body == null)
+            {
+                continue;
+            }
+
+            if (body.IsTracked)
+            {
+				//print ("TRACKING!!");
+               //this.gameObject.transform.position = new Vector3
+               // this.gameObject.transform.localPosition =  body.Joints[_jointType].Position;
+                var pos = body.Joints[_jointType].Position;
+				Debug.Log (pos.X);
+               this.gameObject.transform.position = new Vector3(pos.X, pos.Y, pos.Z);
+                break;
+            }
+        }
+	}
+}
